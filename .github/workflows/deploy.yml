@@ -1,4 +1,3 @@
-
 name: CI Pipeline PPL
 
 on:
@@ -20,5 +19,26 @@ jobs:
             echo "Validasi Sukses: NIM dan Nama ditemukan."
           else
             echo "Validasi Gagal: NIM atau Nama tidak ditemukan di index.html"
-            exit 1 # Memberi sinyal gagal ke pipeline
+            exit 1
           fi
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
