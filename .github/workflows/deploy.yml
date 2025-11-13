@@ -1,0 +1,24 @@
+
+name: CI Pipeline PPL
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Run simple validation test
+        run: |
+          echo "Memulai validasi konten file index.html..."
+          if grep -q "NIM" index.html && grep -q "Nama" index.html; then
+            echo "Validasi Sukses: NIM dan Nama ditemukan."
+          else
+            echo "Validasi Gagal: NIM atau Nama tidak ditemukan di index.html"
+            exit 1 # Memberi sinyal gagal ke pipeline
+          fi
